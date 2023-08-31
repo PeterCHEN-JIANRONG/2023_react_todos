@@ -13,11 +13,11 @@ const App = () => {
 
   return (
     <>
-      <nav>
+      {/* <nav>
         <NavLink to="/" style={getNavStyle}>首頁</NavLink> | 
         <NavLink to="/auth/login" style={getNavStyle}>登入</NavLink> | 
         <NavLink to="/auth/sign_up" style={getNavStyle}>註冊</NavLink>
-      </nav>
+      </nav> */}
       <Routes>
         <Route path="/" element={ <Home /> } />
         <Route path="/auth" element={ <Auth /> } >
