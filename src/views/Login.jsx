@@ -24,9 +24,8 @@ const Login = () => {
       setLoading(true);
       const { data } = await apiUserSignIn(form);
       const {token, exp, nickname} = data
-      // 儲存 token, nickname > cookie
+      // 儲存 token > cookie
       document.cookie = `todo_token=${token};expires=${new Date(exp*1000).toUTCString()}`
-      document.cookie = `todo_nickname=${nickname};expires=${new Date(exp*1000).toUTCString()}`
       setLoading(false);
 
       navigate('/')

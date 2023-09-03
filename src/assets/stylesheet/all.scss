@@ -528,3 +528,20 @@ nav ul a span {
   text-decoration: none;
 }
 /*# sourceMappingURL=all.css.map */
+
+.nav_menu {
+  .nav_text {
+    text-decoration: none;
+    color: #333333;
+    margin-left: 24px;
+  }
+
+  .nav_btn {
+    border: none;
+    background: none;
+    font-size: 1rem;
+    color: #333333;
+    margin-left: 24px;
+    cursor: pointer;
+  }
+}

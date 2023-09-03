@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const userRequest = axios.create({
+export const userRequest = axios.create({
   baseURL: `${import.meta.env.VITE_APP_BASE_URL}/users`
 })
 
