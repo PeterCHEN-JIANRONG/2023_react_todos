@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { userRequest, apiUserCheckout, apiUserSignOut } from "../services/users";
 import { useNavigate } from "react-router-dom";
+import { todoRequest, apiAddTodo, apiGetTodo, apiDeleteTodo } from "../services/todos";
 
 const Todo = () => {
   const nabigate = useNavigate()
   const [nickname, setNickname] = useState('') 
 
   useEffect(() => {
-    checkAuth();
+    (async ()=> {
+      await checkAuth();
+      await getTodo();
+    })()
   }, [])
 
   // 驗證 token
@@ -17,11 +21,18 @@ const Todo = () => {
       .find((row) => row.startsWith("todo_token="))
       ?.split("=")[1];
       
-    // Alter defaults after instance has been created
+    
+    // set axios defaults authorization
+    // axios.defaults.headers.common['Authorization'] = token;
+
+    // set custom instance authorization
     userRequest.defaults.headers.common['Authorization'] = token;
+    todoRequest.defaults.headers.common['Authorization'] = token;
+
 
     try {
       const { data } = await apiUserCheckout()
+      console.log('auth驗證成功')
       const { nickname } = data;
       setNickname(nickname)
     } catch(error) {
@@ -35,6 +46,46 @@ const Todo = () => {
     try {
       const { data } = await apiUserSignOut()
       nabigate('/auth/login')
+    } catch(error) {
+      // error
+    }
+  }
+
+  // todos:
+  const [todo, setTodo] = useState('')
+  const [todos, setTodos] = useState([])
+
+  // 新增待辦
+  const addTodo = async () => {
+    try {
+      const {data} = await apiAddTodo({
+        content: todo
+      })
+      getTodo()
+      setTodo('')
+    } catch(error) {
+      // error
+    }
+  }
+
+  // 取得待辦
+  const getTodo = async () => {
+    try {
+      const {data} = await apiGetTodo()
+      console.log('取得todod', data.data)
+      setTodos(data.data)
+    } catch(error) {
+      // error
+    }
+  }
+
+  // 移除待辦
+  const deleteTodo = async (id) => {
+    try {
+      await apiDeleteTodo(id)
+      setTodos(
+        todos.filter((item)=>item.id !== id)
+      )
     } catch(error) {
       // error
     }
@@ -62,8 +113,15 @@ const Todo = () => {
         <div className="conatiner todoListPage vhContainer">
           <div className="todoList_Content">
             <div className="inputBox">
-              <input type="text" placeholder="請輸入待辦事項" />
-              <a href="#">
+              <input type="text" placeholder="請輸入待辦事項" 
+              value={todo}
+              onChange={(e)=>{
+                setTodo(e.target.value)
+              }}/>
+              <a href="#" onClick={(e)=>{
+                e.preventDefault();
+                addTodo();
+              }}>
                 <i className="fa fa-plus"></i>
               </a>
             </div>
@@ -83,84 +141,28 @@ const Todo = () => {
               </ul>
               <div className="todoList_items">
                 <ul className="todoList_item">
-                  <li>
-                    <label className="todoList_label">
-                      <input
-                        className="todoList_input"
-                        type="checkbox"
-                        value="true"
-                      />
-                      <span>把冰箱發霉的檸檬拿去丟</span>
-                    </label>
-                    <a href="#">
-                      <i className="fa-sharp fa-solid fa-trash"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <label className="todoList_label">
-                      <input
-                        className="todoList_input"
-                        type="checkbox"
-                        value="true"
-                      />
-                      <span>打電話叫媽媽匯款給我</span>
-                    </label>
-                    <a href="#">
-                      <i className="fa fa-times"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <label className="todoList_label">
-                      <input
-                        className="todoList_input"
-                        type="checkbox"
-                        value="true"
-                      />
-                      <span>整理電腦資料夾</span>
-                    </label>
-                    <a href="#">
-                      <i className="fa fa-times"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <label className="todoList_label">
-                      <input
-                        className="todoList_input"
-                        type="checkbox"
-                        value="true"
-                      />
-                      <span>繳電費水費瓦斯費</span>
-                    </label>
-                    <a href="#">
-                      <i className="fa fa-times"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <label className="todoList_label">
-                      <input
-                        className="todoList_input"
-                        type="checkbox"
-                        value="true"
-                      />
-                      <span>約vicky禮拜三泡溫泉</span>
-                    </label>
-                    <a href="#">
-                      <i className="fa fa-times"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <label className="todoList_label">
-                      <input
-                        className="todoList_input"
-                        type="checkbox"
-                        value="true"
-                      />
-                      <span>約ada禮拜四吃晚餐</span>
-                    </label>
-                    <a href="#">
-                      <i className="fa fa-times"></i>
-                    </a>
-                  </li>
+                  {
+                    todos.map((item)=>{
+                      return (
+                        <li key={item.createTime}>
+                          <label className="todoList_label">
+                            <input
+                              className="todoList_input"
+                              type="checkbox"
+                              value="true"
+                            />
+                            <span>{item.content}</span>
+                          </label>
+                          <a href="#">
+                            <i className="fa-sharp fa-solid fa-trash" 
+                            onClick={()=>{
+                              deleteTodo(item.id)
+                            }}></i>
+                          </a>
+                        </li>
+                      )
+                    })
+                  }
                 </ul>
                 <div className="todoList_statistics">
                   <p> 5 個已完成項目</p>
