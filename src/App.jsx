@@ -1,5 +1,5 @@
 import { Route, Routes, NavLink } from "react-router-dom";
-import Home from "./views/Home";
+import Todo from "./views/Todo";
 import Login from "./views/Login";
 import SignUp from "./views/SignUp";
 import Auth from "./views/layout/Auth";
@@ -19,7 +19,7 @@ const App = () => {
         <NavLink to="/auth/sign_up" style={getNavStyle}>註冊</NavLink>
       </nav> */}
       <Routes>
-        <Route path="/" element={ <Home /> } />
+        <Route path="/" element={ <Todo /> } />
         <Route path="/auth" element={ <Auth /> } >
           <Route path="login" element={ <Login />} />
           <Route path="sign_up" element={ <SignUp />} />

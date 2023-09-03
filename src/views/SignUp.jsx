@@ -10,6 +10,7 @@ const SignUp = () => {
     password: "",
     password_confirm: "",
   });
+  const [loading, setLoading] = useState(false)
 
   // 註冊
   const signUp = async () => {
@@ -19,9 +20,12 @@ const SignUp = () => {
     }
 
     try{
+      setLoading(true)
       const { data } = await apiUserSignUp(form)
+      setLoading(false)
       navigate('/auth/login')
     } catch(error) {
+      setLoading(false)
       // error
     }
   };
@@ -119,10 +123,11 @@ const SignUp = () => {
         <input
           className="formControls_btnSubmit"
           type="button"
+          value="註冊帳號"
           onClick={(e) => {
             signUp();
           }}
-          value="註冊帳號"
+          disabled={loading}
         />
         <NavLink className="formControls_btnLink" to="/auth/login">
           登入

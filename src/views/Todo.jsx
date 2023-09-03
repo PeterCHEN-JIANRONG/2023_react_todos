@@ -1,4 +1,4 @@
-const Home = () => {
+const Todo = () => {
   return (<>
     <div id="todoListPage" className="bg-half">
         <nav>
@@ -91,4 +91,4 @@ const Home = () => {
   </>)
 }
 
-export default Home;
+export default Todo;
