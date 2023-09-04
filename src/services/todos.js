@@ -22,7 +22,7 @@ export const apiAddTodo = (data) => todoRequest.post('/', data);
 export const apiEditTodo = (id, data) => todoRequest.post(`/${id}`, data);
 
 // 修改待辦"狀待"
-export const apiToggleTodo = (id) => todoRequest.post(`/${id}`);
+export const apiToggleTodo = (id) => todoRequest.patch(`/${id}/toggle`);
 
 // 刪除待辦
 export const apiDeleteTodo = (id) => todoRequest.delete(`/${id}`);

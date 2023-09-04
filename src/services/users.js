@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export const userRequest = axios.create({
   baseURL: `${import.meta.env.VITE_APP_BASE_URL}/users`
@@ -8,7 +9,23 @@ export const userRequest = axios.create({
 userRequest.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
-  console.log(error.response.data.message)
+  const { status, data } = error.response;
+  console.log(status, data.message)
+
+  switch (status) {
+    case 401:
+    case 404:
+      Swal.fire({
+        icon: 'error',
+        title: status,
+        text: data.message,
+        // showConfirmButton: false,
+        timer: 2000
+      })
+      break;
+    default:
+      break;
+  }
   return Promise.reject(error);
 });
 
