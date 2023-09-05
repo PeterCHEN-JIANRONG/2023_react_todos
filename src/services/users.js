@@ -17,8 +17,8 @@ userRequest.interceptors.response.use(function (response) {
     case 404:
       Swal.fire({
         icon: 'error',
-        title: status,
-        text: data.message,
+        title: data.message,
+        text: '',
         // showConfirmButton: false,
         timer: 2000
       })

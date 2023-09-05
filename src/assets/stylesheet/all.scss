@@ -545,3 +545,26 @@ nav ul a span {
     cursor: pointer;
   }
 }
+
+.icon-btn {
+  border: 1px solid red;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  transition: background-color 0.2s;
+
+  i {
+    display: inline-flex;
+    font-size: 16px;
+    color: red;
+    transition: color 0.2s;
+  }  
+
+  &:hover {
+    background: red;
+
+    i {
+      color: white;
+    }
+  }
+}

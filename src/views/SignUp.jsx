@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { apiUserSignUp  } from "../services/users";
+import Swal from "sweetalert2";
 
 const SignUp = () => {
   const navigate = useNavigate()
@@ -27,6 +28,14 @@ const SignUp = () => {
     } catch(error) {
       setLoading(false)
       // error
+      const { status, data } = error.response;
+      Swal.fire({
+        icon: 'error',
+        title: data.message,
+        text: '',
+        // showConfirmButton: false,
+        timer: 2000
+      })
     }
   };
 

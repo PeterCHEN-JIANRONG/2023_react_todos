@@ -13,6 +13,7 @@ import {
   apiDeleteTodo,
   apiToggleTodo,
 } from "../services/todos";
+import Swal from "sweetalert2";
 
 const Todo = () => {
   const nabigate = useNavigate();
@@ -43,7 +44,7 @@ const Todo = () => {
 
     try {
       const { data } = await apiUserCheckout();
-      console.log("auth驗證成功");
+      // console.log("auth驗證成功");
       const { nickname } = data;
       setNickname(nickname);
     } catch (error) {
@@ -105,7 +106,7 @@ const Todo = () => {
   const getTodo = async () => {
     try {
       const { data } = await apiGetTodo();
-      console.log("取得todod", data.data);
+      // console.log("取得todod", data.data);
       setTodos(data.data);
     } catch (error) {
       // error
@@ -149,6 +150,30 @@ const Todo = () => {
     });
   };
 
+  // clear completed todo
+  const clearCompleted = () => {
+    const completedTodo = todos.filter((item) => item.status);
+    const promiseArray = [];
+    for (let i = 0; i < completedTodo.length; i++) {
+      promiseArray.push(apiDeleteTodo(completedTodo[i].id));
+    }
+
+    Promise.all(promiseArray)
+      .then((res) => {
+        setTodos(todos.filter((item) => !item.status));
+        Swal.fire({
+          icon: "success",
+          title: "清除成功",
+          text: "",
+          // showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((err) => {
+        // error
+      });
+  };
+
   return (
     <>
       <div id="todoListPage" className="bg-half">
@@ -182,6 +207,11 @@ const Todo = () => {
                 value={todo}
                 onChange={(e) => {
                   setTodo(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    addTodo();
+                  }
                 }}
               />
               <a
@@ -237,7 +267,7 @@ const Todo = () => {
                 <ul className="todoList_item">
                   {tempTodos.map((item) => {
                     return (
-                      <li key={item.createTime}>
+                      <li key={item.id}>
                         <label className="todoList_label">
                           <input
                             className="todoList_input"
@@ -250,14 +280,15 @@ const Todo = () => {
                           />
                           <span>{item.content}</span>
                         </label>
-                        <a href="#">
-                          <i
-                            className="fa-sharp fa-solid fa-trash"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              deleteTodo(item.id);
-                            }}
-                          ></i>
+                        <a
+                          href="#"
+                          className="icon-btn"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            deleteTodo(item.id);
+                          }}
+                        >
+                          <i className="fa-sharp fa-solid fa-trash"></i>
                         </a>
                       </li>
                     );
@@ -265,9 +296,17 @@ const Todo = () => {
                 </ul>
                 <div className="todoList_statistics">
                   <p>
-                    {todos.filter((item) => item.status).length} 個已完成項目
+                    {todos.filter((item) => !item.status).length} 個已完成項目
                   </p>
-                  <a href="#">清除已完成項目</a>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      clearCompleted();
+                    }}
+                  >
+                    清除已完成項目
+                  </a>
                 </div>
               </div>
             </div>
