@@ -153,8 +153,8 @@ const Todo = () => {
   // clear completed todo
   const clearCompleted = () => {
     const completedTodo = todos.filter((item) => item.status);
-    if(!completedTodo.length) {
-      return
+    if (!completedTodo.length) {
+      return;
     }
 
     const promiseArray = [];
@@ -268,51 +268,68 @@ const Todo = () => {
                 </li>
               </ul>
               <div className="todoList_items">
-                <ul className="todoList_item">
-                  {tempTodos.map((item) => {
-                    return (
-                      <li key={item.id}>
-                        <label className="todoList_label">
-                          <input
-                            className="todoList_input"
-                            type="checkbox"
-                            checked={item.status}
-                            onChange={(e) => {
-                              // console.log(e.target.checked);
-                              toggleTodo(item.id);
-                            }}
-                          />
-                          <span>{item.content}</span>
-                        </label>
-                        <a
-                          href="#"
-                          className="icon-btn"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            deleteTodo(item.id);
-                          }}
-                        >
-                          <i className="fa-sharp fa-solid fa-trash"></i>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-                <div className="todoList_statistics">
-                  <p>
-                    {todos.filter((item) => !item.status).length} 個已完成項目
-                  </p>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      clearCompleted();
+                {todos.length ? (
+                  <>
+                    <ul className="todoList_item">
+                      {tempTodos.map((item) => {
+                        return (
+                          <li key={item.id}>
+                            <label className="todoList_label">
+                              <input
+                                className="todoList_input"
+                                type="checkbox"
+                                checked={item.status}
+                                onChange={(e) => {
+                                  // console.log(e.target.checked);
+                                  toggleTodo(item.id);
+                                }}
+                              />
+                              <span>{item.content}</span>
+                            </label>
+                            <a
+                              href="#"
+                              className="icon-btn"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                deleteTodo(item.id);
+                              }}
+                            >
+                              <i className="fa-sharp fa-solid fa-trash"></i>
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    <div className="todoList_statistics">
+                      <p>
+                        {todos.filter((item) => !item.status).length}{" "}
+                        個待完成項目
+                      </p>
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          clearCompleted();
+                        }}
+                        className={`${
+                          todos.filter((e) => e.status).length === 0
+                            ? "disabled"
+                            : ""
+                        }`}
+                      >
+                        清除已完成項目
+                      </a>
+                    </div>
+                  </>
+                ) : (
+                  <p
+                    style={{
+                      textAlign: "center",
                     }}
-                    className={`${todos.filter(e=>e.status).length === 0 ? 'disabled': ''}`}
                   >
-                    清除已完成項目
-                  </a>
-                </div>
+                    目前尚無待辦事項
+                  </p>
+                )}
               </div>
             </div>
           </div>
