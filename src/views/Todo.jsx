@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 import classNames from "classnames";
 import {
   userRequest,
@@ -16,42 +17,25 @@ import {
 import Swal from "sweetalert2";
 
 const Todo = () => {
-  const nabigate = useNavigate();
+  const navigate = useNavigate();
   const [nickname, setNickname] = useState("");
 
   useEffect(() => {
-    (async () => {
-      await checkAuth();
-      await getTodo();
-    })();
+    getNickname();
+    getTodo();
   }, []);
 
-  // 驗證 token
-  const checkAuth = async () => {
+  // get nickname form jwt_token
+  const getNickname = () => {
     const token = document.cookie
       .split("; ")
       .find((row) => row.startsWith("todo_token="))
       ?.split("=")[1];
 
-    if (!token) return nabigate("/auth/login");
-
-    // set axios defaults authorization
-    // axios.defaults.headers.common['Authorization'] = token;
-
-    // set custom instance authorization
-    userRequest.defaults.headers.common["Authorization"] = token;
-    todoRequest.defaults.headers.common["Authorization"] = token;
-
-    try {
-      const { data } = await apiUserCheckout();
-      // console.log("auth驗證成功");
-      const { nickname } = data;
-      setNickname(nickname);
-    } catch (error) {
-      // error
-      nabigate("/auth/login");
-    }
-  };
+      // jwt decode
+      const decodedToken = jwt_decode(token);
+      setNickname(decodedToken.nickname)
+  }
 
   // 登出
   const signOut = async () => {
@@ -62,7 +46,7 @@ const Todo = () => {
         "todo_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
       userRequest.defaults.headers.common["Authorization"] = "";
       todoRequest.defaults.headers.common["Authorization"] = "";
-      nabigate("/auth/login");
+      navigate("/auth/login");
     } catch (error) {
       // error
     }
@@ -91,9 +75,14 @@ const Todo = () => {
 
   // 新增待辦
   const addTodo = async () => {
+    if(!todo.trim()) {
+      setTodo("")
+      return
+    }
+
     try {
       const { data } = await apiAddTodo({
-        content: todo,
+        content: todo.trim(),
       });
       getTodo();
       setTodo("");

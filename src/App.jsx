@@ -3,6 +3,7 @@ import Todo from "./views/Todo";
 import Login from "./views/Login";
 import SignUp from "./views/SignUp";
 import Auth from "./views/layout/Auth";
+import ProtectedRoute from "./views/layout/ProtectedRoute";
 
 const App = () => {
   const getNavStyle = ({isActive})=>{
@@ -19,7 +20,9 @@ const App = () => {
         <NavLink to="/auth/sign_up" style={getNavStyle}>註冊</NavLink>
       </nav> */}
       <Routes>
-        <Route path="/" element={ <Todo /> } />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={ <Todo /> } />
+        </Route>
         <Route path="/auth" element={ <Auth /> } >
           <Route path="login" element={ <Login />} />
           <Route path="sign_up" element={ <SignUp />} />
