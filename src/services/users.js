@@ -10,7 +10,9 @@ userRequest.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   const { status, data } = error.response;
-  console.log(status, data.message)
+  if (import.meta.env.MODE === "development") {
+    console.log(data.message)
+  }
 
   switch (status) {
     case 401:

@@ -523,9 +523,14 @@ nav ul a span {
 }
 
 .todoList_list .todoList_statistics a {
-  color: #9F9A91;
+  color: red;
   font-size: 0.875rem;
   text-decoration: none;
+
+  &.disabled {
+    color: #9F9A91;
+    cursor: no-drop;
+  }
 }
 /*# sourceMappingURL=all.css.map */
 

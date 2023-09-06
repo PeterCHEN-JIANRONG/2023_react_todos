@@ -72,12 +72,12 @@ const Todo = () => {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
   const [tempTodos, setTempTodos] = useState([]);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("all");
 
   // 監聽 filter 切換
   useEffect(() => {
     switch (filter) {
-      case "":
+      case "all":
         setTempTodos(todos);
         break;
       case "uncompleted":
@@ -153,6 +153,10 @@ const Todo = () => {
   // clear completed todo
   const clearCompleted = () => {
     const completedTodo = todos.filter((item) => item.status);
+    if(!completedTodo.length) {
+      return
+    }
+
     const promiseArray = [];
     for (let i = 0; i < completedTodo.length; i++) {
       promiseArray.push(apiDeleteTodo(completedTodo[i].id));
@@ -229,10 +233,10 @@ const Todo = () => {
                 <li>
                   <a
                     href="#"
-                    className={`${filter === "" ? "active" : ""}`}
+                    className={`${filter === "all" ? "active" : ""}`}
                     onClick={(e) => {
                       e.preventDefault();
-                      setFilter("");
+                      setFilter("all");
                     }}
                   >
                     全部
@@ -304,6 +308,7 @@ const Todo = () => {
                       e.preventDefault();
                       clearCompleted();
                     }}
+                    className={`${todos.filter(e=>e.status).length === 0 ? 'disabled': ''}`}
                   >
                     清除已完成項目
                   </a>

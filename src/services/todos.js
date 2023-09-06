@@ -8,7 +8,11 @@ export const todoRequest = axios.create({
 todoRequest.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
-  console.log(error.response.data.message)
+  const { status, data } = error.response;
+  if (import.meta.env.MODE === "development") {
+    console.log(data.message)
+  }
+
   return Promise.reject(error);
 });
 
