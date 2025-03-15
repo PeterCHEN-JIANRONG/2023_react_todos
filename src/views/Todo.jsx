@@ -145,13 +145,10 @@ const Todo = () => {
     if (!completedTodo.length) {
       return;
     }
+    
+    const promiseArr = completedTodo.map((item) => apiDeleteTodo(item.id))
 
-    const promiseArray = [];
-    for (let i = 0; i < completedTodo.length; i++) {
-      promiseArray.push(apiDeleteTodo(completedTodo[i].id));
-    }
-
-    Promise.all(promiseArray)
+    Promise.all(promiseArr)
       .then((res) => {
         setTodos(todos.filter((item) => !item.status));
         Swal.fire({
