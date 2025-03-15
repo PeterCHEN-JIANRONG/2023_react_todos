@@ -297,11 +297,9 @@ const Todo = () => {
                           e.preventDefault();
                           clearCompleted();
                         }}
-                        className={`${
-                          todos.filter((e) => e.status).length === 0
-                            ? "disabled"
-                            : ""
-                        }`}
+                        className={classNames({
+                          disabled: !todos.filter((e) => e.status).length
+                        })}
                       >
                         清除已完成項目
                       </a>
