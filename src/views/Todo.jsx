@@ -115,6 +115,7 @@ const Todo = () => {
   // 修改狀態
   const toggleTodo = async (id) => {
     try {
+      const { data } = await apiToggleTodo(id);
       // id 相同: status 反向, 不同: 不變
       setTodos(
         todos.map((item) =>
@@ -126,7 +127,6 @@ const Todo = () => {
             : item
         )
       );
-      const { data } = await apiToggleTodo(id);
     } catch (error) {
       // error
     }
